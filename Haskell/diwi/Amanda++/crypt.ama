@@ -1,0 +1,36 @@
+|| Dick Bruin, 10/03/2010
+|| symmetric key encryption
+
+|| crypt n m d text:
+||   text is padded with spaces until its length is a multiple of n
+||   the letters in text are circulary shifted by the displacement d
+||   text is divided in blocks of length n
+||   every block of n letters is circulary shifted m times
+||   the shifted groups are concatenated
+
+|| example:
+||   crypt 8 5 6 "Wat staat hier crypt acht vijf zes"
+||               "zggCgz yx iz nokginxevz l fz bop   ky   "
+
+
+test = crypt 8 5 6 "Wat staat hier crypt acht vijf zes"
+decrypttest = decrypt 8 5 6 test
+
+crypt n m d = concat . map (shift m) . group n . map (shiftLetter d) . pad n
+decrypt n m d = crypt n (n-m) (26 - d)
+
+pad n xs = xs ++ rep ' ' ((n - #xs mod n) mod n)
+
+shiftLetter d c
+= decode ((code c - code 'a' + d) mod 26 + code 'a') ,if member "abcdefghijklmnopqrstuvwxyz" c
+= decode ((code c - code 'A' + d) mod 26 + code 'A') ,if member "ABCDEFGHIJKLMNOPQRSTUVWXYZ" c
+= c
+
+group m [] = []
+group m xs = a : group m b
+where
+  (a, b) = split m xs 
+
+shift m xs = b ++ a
+where
+  (a, b) = split m xs

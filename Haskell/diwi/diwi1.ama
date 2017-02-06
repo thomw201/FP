@@ -1,0 +1,304 @@
+|| Aantal functiedefinities voor de werkplaats.
+
+gem a b = (a + b) // 2
+
+||verhoog n = n + 1
+
+ing a b = a * b + a // b
+
+circelOppervlak r = r ^ 2 * pi
+
+opbrengst b r n = b * ((r // 100 + 1) ^ n)
+
+f x = 1, if x = 1
+    = 2, if x = 2
+
+alleGelijk a b c = True, if a = b /\ a = c
+                 = False, otherwise
+
+alleVerschillend a b c = True, if a ~= b /\ a ~= c /\ b ~= c
+                       = False, otherwise
+
+hoeveelGelijk a b c = 3, if a = b /\ a = c
+                    = 2, if b = c \/ b = a
+                    = 0, otherwise
+
+derde xs = hd (drop 2 xs)
+
+plak3 xs ys zs = xs ++ ys ++ zs
+
+derdetmnegatief xs =  take 7 (drop 2 xs)
+
+|||||||||||||||||||||||||||||||||||||||||||||
+||||||||||||Diwi Opdracht 2.3||||||||||||||||
+|||||||||||||||||||||||||||||||||||||||||||||
+
+wtf xs = [x+1| x <- xs]
+
+tussen3en7 xs = [x | x <- xs; x > 3 /\ x < 7]
+
+sumsqr n = [x^2 | x <- [1..n]]
+
+drietallen xs = [x*1, x*2, x*3 | x <- xs]
+
+delers n = [x|x<-[1..n]; n mod x = 0]
+
+priemgetal n = #(delers n) > 2
+
+perfectgetal n = sum(delers n)-n = n
+
+ggd n m = max[x|x<-(delers n); y<-(delers m); x=y]
+
+pythagoras n = [(x, y, z)|x <- [1..n]; y <- [x..n]; z <- [y..n]; x^2 + y^2 = z^2]
+
+|||||||||||||||||||||||||||||||||||||||||||||
+||||||||||||Diwi Opdracht 2.4||||||||||||||||
+|||||||||||||||||||||||||||||||||||||||||||||
+
+haakjes2 xs = hkj2 0 0 xs
+hkj2 n m [] = (n = 0)
+hkj2 n m (x:xs) = False, if (n < 0) \/ (m < 0)
+                = hkj2 (n+1) m xs, if x = '('
+                = hkj2 (n-1) m xs, if x = ')' 
+                = hkj2 n (m+1) xs, if x = '['
+                = hkj2 n (m-1) xs, if x = ']'
+
+haakjes xs = hkj xs []
+hkj [] ys = #ys = 0
+hkj xs [] = #xs = 0
+hkj (x:xs) ys = hkj xs ([x]++ys), if x = '('
+              = hkj xs ([x]++ys), if x = '['
+              = hkj xs ([x]++ys), if x = '{'
+              = hkj xs (drop 1 ys), if x = ')' /\ (hd ys) = '('
+              = hkj xs (drop 1 ys), if x = ']' /\ (hd ys) = '['
+              = hkj xs (drop 1 ys), if x = '}' /\ (hd ys) = '{'
+              = False, otherwise
+
+numtobin n = cnvrtmod n []
+cnvrtmod 0 xs = xs
+cnvrtmod n xs = cnvrtmod (n / 2) ([1]++xs), if n mod 2 = 1
+              = cnvrtmod (n / 2) ([0]++xs), if n mod 2 = 0
+
+bintonum xs = binnum xs 0
+binnum [] n = n
+binnum (x:xs) n = binnum xs (n + 2 ^ #xs), if (x = 1)
+                = binnum xs n, if (x = 0)
+
+remove n [] = []
+remove n (x:xs) = remove n xs, if x = n
+                = [x] ++ remove n xs , otherwise
+
+||1 [1,2,4,1,5]
+||1 [2,4,1,5]
+||n  x [4,1,5]
+||[2] ++ 1 [4,1,5]
+||       n  x [1,5]
+||[2] ++ [4] ++ 1 [1,5]
+||              n  x [5]
+||[2] ++ [4] ++ 1 [5]
+||              n  x []
+||[2] ++ [4] ++ [5] ++ 1 []
+||[2] ++ [4] ++ [5] ++ []
+||[2,4,5]
+
+    removeOnce n [] = []
+    removeOnce n (x:xs) = xs, if x = n
+                        = [x] ++ removeOnce n xs , otherwise
+
+    subset [] ys = True
+    subset (x:xs) ys = subset xs ys, if member ys x
+                     = False, otherwise
+
+    last xs = last2 xs 0
+    last2 [] a = a
+    last2 (x:xs) a = last2 xs x
+
+    langstebeginplateau xs = pudding xs []
+    pudding [] ys = ys
+    pudding (x:xs) ys = pudding xs (x:ys), if 1 > # ys \/ x = hd ys
+                      = ys, otherwise
+
+    insert x ys = insert2 x ys
+    insert2 x [] = [x]
+    insert2 x (y:ys) = (x:y:ys), if x < y
+                     = [y] ++ insert2 x ys, otherwise
+
+    isort [] = []
+    isort (x:xs) = isort [y | y <- xs; y <= x] ++
+                   [x] ++
+                   isort [y | y <- xs; y > x]
+
+    merge2 xs [] = xs
+    merge2 [] xs = xs 
+    merge2 (x:xs) (y:ys) = [x] ++ merge2 xs (y:ys) ,if x < y
+                         = [y] ++ merge2 (x:xs) ys ,otherwise
+
+    msort [] = []
+    msort [x] = [x]
+    msort xs = merge2 es ts
+    where es = msort (take m xs)
+          ts = msort (drop m xs)
+           m = #xs/2
+
+
+|||||||||||||||||||||||||||||||||||||||||||||
+||||||||||||Diwi Opdracht 2.5||||||||||||||||
+|||||||||||||||||||||||||||||||||||||||||||||
+
+
+    binboom ::= Leeg | Knoop num binboom binboom
+    bb1 = Knoop 1 (Knoop 2 (Knoop 3 Leeg Leeg) (Knoop 4 Leeg Leeg)) Leeg
+    bb2 = Knoop 1 (Knoop 2 (Knoop 3 Leeg Leeg) (Knoop 4 (Leeg) (Leeg))) (Knoop 5 (Knoop 6 (Leeg) (Leeg)) (Knoop 7 (Leeg) (Leeg)))
+    bb3 = Knoop 1 (Knoop 2 (Knoop 3 Leeg Leeg) (Knoop 4 (Leeg) (Leeg))) (Knoop 5 (Knoop 6 (Leeg) (Leeg)) (Leeg))
+
+    aantalGet Leeg = 0
+    aantalGet (Knoop g links rechts) = 1 + aantalGet links + aantalGet rechts
+
+    spiegelBoom Leeg = Leeg
+    spiegelBoom (Knoop g links rechts) = (Knoop g (spiegelBoom rechts) (spiegelBoom links))
+
+    inorder Leeg = [] 
+    inorder (Knoop g links rechts) = inorder links ++ [g] ++ inorder rechts
+
+    preOrder Leeg = []
+    preOrder (Knoop g links rechts) =[g]++ preOrder links ++ preOrder rechts
+
+    postOrder Leeg = []
+    postOrder (Knoop g links rechts) = postOrder links ++ postOrder rechts ++[g]
+
+    maxDepth Leeg = 0
+    maxDepth (Knoop g Leeg Leeg) = 1
+    maxDepth (Knoop g l Leeg) = 1 + maxDepth l
+    maxDepth (Knoop g Leeg r) = 1 + maxDepth r
+    maxDepth (Knoop g l r) = 1 + maxDepth l, if maxDepth l > maxDepth r
+                           = 1 + maxDepth r, otherwise
+
+    isVolledig Leeg = True
+    isvolledig (Knoop g l r) = isVolledig r /\ isVolledig l, if maxDepth l = maxDepth r
+                             = False, otherwise
+                             
+    isEvenwichtig Leeg = True
+    isEvenwichtig (Knoop g l r) = isEvenwichtig r \/ isEvenwichtig l, if maxDepth l = maxDepth r
+                                = False, otherwise
+
+    maakBoom [] = Leeg
+    maakBoom [x] = Knoop x Leeg Leeg
+    maakBoom xs = (Knoop r (maakBoom ls) (maakBoom rs) )
+    where ls =(take m xs)
+         (r:rs) =(drop m xs) 
+          m = (#xs) / 2
+
+    sorteer xs = inorder (maakBoom xs)
+
+    opgave3a string = stap 1 string
+    where
+        stap 1 ('a':cs) = stap 2 cs
+        stap 1 ('a':cs) = stap 1 cs
+        stap 1 ('b':cs) = stap 1 cs
+        stap 2 ('b':cs) = stap 3 cs
+        stap 2 ('b':cs) = stap 2 cs
+        stap 2 ('a':cs) = stap 2 cs
+        stap 3 ('b':cs) = stap 3 cs
+        stap 3 ('b':cs) = stap 4 cs
+        stap 3 ('a':cs) = stap 3 cs
+        stap 4 ('b':cs) = stap 4 cs
+        stap 4 ('a':cs) = stap 4 cs
+        stap 4 "" = True
+        stap _ _  = False
+
+    opgrave3b string = stap 1 string
+    where
+        stap 1 ('b':cs) = stap 1 cs
+        stap 1 ('a':cs) = stap 2 cs
+        stap 2 ('b':cs) = stap 2 cs
+        stap 2 ('b':cs) = stap 1 cs
+        stap 2 ('b':cs) = stap 3 cs
+        stap 3 "" = True
+        stap _ _ = False
+
+    opgave3c string = stap 1 string
+    where
+        stap 1 ('a':cs) = stap 2 cs
+        stap 1 ('b':cs) = stap 4 cs
+        stap 2 ('a':cs) = stap 1 cs
+        stap 2 ('a':cs) = stap 3 cs
+        stap 4 ('b':cs) = stap 1 cs
+        stap 4 ('b':cs) = stap 5 cs
+        stap 3 "" = True
+        stap 5 "" = True
+        stap _ _ = False
+
+verwissel Leeg = Leeg
+verwissel (Knoop g l r) = (Knoop g r l)
+
+aanvullen xs = xs, if #xs = 8
+             = aanvullen ([0]++xs), otherwise
+
+bin a = aanvullen (numtobin (code a))
+
+dbin xs = decode(bintonum xs)
+
+xor n m = 1, if (n ~= m)
+        = 0, otherwise
+
+
+xorbyte [] [] = []
+xorbyte (x:xs) (y:ys) = [xor x y] ++ xorbyte xs ys
+
+enc n m = dbin(xorbyte (bin n) (bin m))
+
+encrypt b [] = []
+encrypt b (x:xs) = [enc b x] ++ encrypt b xs
+
+uniekgetal = [(x1, x2, x3, x4, x5, x6, x7, x8, x9) |
+            x1 <- [1..9];
+            x2 <- [1..9] -- [x1];
+            n:= x1 * 10 + x2;
+            n%2 = 0;
+            x3 <- [1..9] -- [x1, x2];
+            n:=n*10+x3;
+            n%3 = 0;
+            x4 <- [1..9] -- [x1, x2, x3];
+            n:=n*10+x4;
+            n%4 = 0;
+            x5 <- [1..9] -- [x1, x2, x3, x4];
+            n:=n*10+x5;
+            n%5 = 0;
+            x6 <- [1..9] -- [x1, x2, x3, x4, x5];
+            n:=n*10+x6;
+            n%6 = 0;
+            x7 <- [1..9] -- [x1, x2, x3, x4, x5, x6];
+            n:=n*10+x7;
+            n%7 = 0;
+            x8 <- [1..9] -- [x1, x2, x3, x4, x5, x6, x7];
+            n:=n*10+x8;
+            n%8 = 0;
+            x9 <- [1..9] -- [x1, x2, x3, x4, x5, x6, x7, x8];
+            n:=n*10+x9;
+            n%9 = 0;
+             ]
+
+||    x8------x7 
+||  .' |    .'| 
+|| x3-----x4' | 
+|| |   |  |   | 
+|| |  ,x5-+---x6 
+|| |.'    | .'  
+|| x1-----x2    
+
+magischekubus = [(x1, x2, x3, x4, x5, x6, x7, x8) |
+                x1 <- [1..8];
+                x2 <- [1..8] -- [x1];
+                x3 <- [1..8] -- [x1,x2];
+                x4 <- [1..8] -- [x1,x2,x3];
+                x1+x2+x3+x4 = 18;
+                x5 <- [1..8] -- [x1,x2,x3,x4];
+                x8 <- [1..8] -- [x1,x2,x3,x4,x5];
+                x1+x3+x5+x8 = 18;
+                x6 <- [1..8] -- [x1,x2,x3,x4,x5,x8];
+                x1+x2+x5+x6 = 18;
+                x7 <- [1..8] -- [x1,x2,x3,x4,x5,x8,x6];
+                x2+x4+x6+x7 = 18;
+                x3+x4+x7+x8 = 18;
+                x5+x6+x7+x8 = 18;
+                ]

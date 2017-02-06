@@ -1,0 +1,58 @@
+|| Dick Bruin, 28/04/2010
+|| Linear code
+
+|| usage:
+|| textCode   [2, 3, 4, 1]   "bla"
+|| textDecode [2, 3, 4, 1]   [40, 20, 5, 5, 40, 80]
+|| here [2, 3, 4, 1] is the key
+
+|| incorrect decoding is indicated by the letter X as in
+|| textDecode [2, 5, 4, 1] [40, 20, 5, 5, 40, 80] = "XXXXt "
+
+letterCode ch 
+= 0                      ,if ch = ' '
+= code ch - code 'a' + 1 ,if 'a' <= ch /\ ch <= 'z'
+= error ("\n\n" ++ [ch] ++ ": incorrect letter")
+
+letterDecode n
+= 'X' ,if round n ~= n \/ n < 0 \/ n > 26
+= ' ' ,if n = 0
+= decode (n + code 'a' - 1)
+
+pairCode [a1, a2, b1, b2] [x1, x2] 
+= [a1 * x1 + a2 * x2, b1 * x1 + b2 * x2]
+
+|| Solve the equations
+|| a1 * x1 + a2 * x2 = y1
+|| b1 * x1 + b2 * x2 = y2
+|| 
+|| b1 * (a1 * x1 + a2 * x2) = b1 * y1 
+|| a1 * (b1 * x1 + b2 * x2) = a1 * y2
+|| ---------------------------------- -
+|| (b1 * a2 - a1 * b2) * x2 = b1 * y1 - a1 * y2
+|| 
+|| b2 * (a1 * x1 + a2 * x2) = b2 * y1 
+|| a2 * (b1 * x1 + b2 * x2) = a2 * y2
+|| ---------------------------------- -
+|| (b2 * a1 - a2 * b1) * x1 = b2 * y1 - a2 * y2
+|| 
+|| determinant = b1 * a2 - a1 * b2
+pairDecode [a1, a2, b1, b2] [y1, y2]
+= [0.5, 0.5] ,if determinant = 0
+= [x1, x2] 
+where
+  determinant = b1 * a2 - a1 * b2
+  x1 = -(b2 * y1 - a2 * y2)  // determinant
+  x2 =  (b1 * y1 - a1 * y2)  // determinant
+  
+textCode key = concat . map (pairCode key) . group 2 . map letterCode . pad 2
+
+textDecode key = map letterDecode . concat . map (pairDecode key) . group 2
+
+pad n xs = xs ++ rep ' ' ((n - #xs mod n) mod n)
+
+group m [] = []
+group m xs = a : group m b
+where
+  (a, b) = split m xs 
+

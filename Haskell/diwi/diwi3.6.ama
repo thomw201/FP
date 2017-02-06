@@ -1,0 +1,13 @@
+kortstepad begin eind graaf = vergroot [(begin, 0)] eind graaf
+vergroot verzameling eind graaf
+= hd eindafstanden ,if eindafstanden ~= []
+= vergroot verzameling1 eind graaf ,otherwise
+where
+ eindafstanden = [a | (x, a) <- verzameling; x = eind]
+ buren = [(y, a1+a2) | (x, a1) <- verzameling;
+         (x1, lijst) <- graaf;
+          x1 = x;
+         (y, a2) <- lijst;
+         ~(member (map fst verzameling) y)]
+ verzameling1 = verzameling ++ [(x,a)|(x,a)<-buren; a = kleinsteafstand]
+ kleinsteafstand = min[a|(x, a) <- buren]
