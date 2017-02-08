@@ -1,12 +1,17 @@
+{-# LANGUAGE OverloadedStrings #-}
+import Data.Set as Set
 import Data.Array
 import Data.Array.MArray
 import Data.Array.ST
 import Text.Printf
 import Control.Exception
-import System.CPUTime
 import Control.Monad.ST
 import Control.Monad (foldM)
-import Data.Set as S
+import Control.Exception
+import Formatting
+import Formatting.Clock
+import System.Clock
+
 
 dijkstra :: (Ix v, Num w, Ord w, Bounded w) => v -> v -> Array v [(v,w)] -> (Array v w, Array v v)
 dijkstra startNode invalid_index adj_list = runST $ do
@@ -15,7 +20,7 @@ dijkstra startNode invalid_index adj_list = runST $ do
   writeArray minimumDistance startNode 0
   prevList <- newNodesArray nodes invalid_index
   let aux vertList =
-        case S.minView vertList of
+        case Set.minView vertList of
           Nothing -> return ()
           Just ((dist, curNode), vertList') ->
             let pathes = adj_list ! curNode
@@ -25,13 +30,13 @@ dijkstra startNode invalid_index adj_list = runST $ do
                   if newDist >= old_dist then
                     return vertList
                   else do
-                    let vertList' = S.delete (old_dist, nextNode) vertList
+                    let vertList' = Set.delete (old_dist, nextNode) vertList
                     writeArray minimumDistance nextNode newDist
                     writeArray prevList nextNode curNode
-                    return $ S.insert (newDist, nextNode) vertList'
+                    return $ Set.insert (newDist, nextNode) vertList'
             in
             foldM f vertList' pathes >>= aux
-  aux (S.singleton (0, startNode))
+  aux (Set.singleton (0, startNode))
   m <- freeze minimumDistance
   p <- freeze prevList
   return (m, p)
@@ -71,21 +76,19 @@ graph2 = listArray ('a', 'f') [[('b',2),('c',3)], --A
 
 main :: IO ()
 main = do
-  start <- getCPUTime
+  start <- getTime Monotonic
   let (minimumDistance, prevList) = dijkstra 'a' ' ' graph2
   putStrLn $ "Distance from a to f: " ++ show (minimumDistance ! 'f')
   let path = getPath 'f' ' ' prevList
   putStrLn $ "Path: " ++ show path
-  end   <- getCPUTime
-  let diff = (fromIntegral (end - start)) / (10^12)
-  printf "Computation time: %0.9f sec\n" (diff :: Double)
-  printf "Individual time: %0.9f sec\n" (diff / 10^6)
-  start <- getCPUTime
+  end   <- getTime Monotonic
+  fprint (timeSpecs % "\n") start end
+  start <- getTime Monotonic
   let (minimumDistance, prevList) = dijkstra 'a' ' ' graph1
   putStrLn $ "Distance from a to n: " ++ show (minimumDistance ! 'n')
   let path = getPath 'n' ' ' prevList
   putStrLn $ "Path: " ++ show path
-  end   <- getCPUTime
-  let diff = (fromIntegral (end - start)) / (10^12)
-  printf "Computation time: %0.12f sec\n" (diff :: Double)
-  printf "Individual time: %0.12f sec\n" (diff / 10^6)
+  end   <- getTime Monotonic
+  fprint (timeSpecs % "\n") start end
+  putStrLn $ " " ++ show start
+  putStrLn $ " " ++ show end
