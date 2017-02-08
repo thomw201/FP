@@ -155,13 +155,13 @@ int main()
 
 	dijkstra(0, graph, minDist, previous);
 	list<int> path = getShortestPath(13, previous);
-	time_point<Clock> end = Clock::now();
-	milliseconds diff = duration_cast<milliseconds>(end - start);
 	cout << "Distance from a to n: " << minDist[13] << " path: ";
 	for each (int pt in path)
 	{
 		cout << letterpt[pt] << " ";
 	}
+	time_point<Clock> end = Clock::now();
+	milliseconds diff = duration_cast<milliseconds>(end - start);
 	cout << endl << "time elapsed: " << diff.count() << "ms" << std::endl;
 	getchar();
     return 0;
