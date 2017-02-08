@@ -65,3 +65,9 @@ adj_list = listArray ('a', 'n') [ [('b',2), ('e',2), ('h',2), ('k',2)], --A
                                   [('f',3), ('g',1), ('j',2), ('l',3), ('n',3)], --M
                                   [('d',1), ('g',1), ('j',1), ('m',3)] ] --N
 
+main :: IO ()
+main = do
+  let (min_distance, previous) = dijkstra 'a' ' ' adj_list
+  putStrLn $ "Distance from a to n: " ++ show (min_distance ! 'n')
+  let path = shortest_path_to 'n' ' ' previous
+  putStrLn $ "Path: " ++ show path
