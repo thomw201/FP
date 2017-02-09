@@ -54,11 +54,11 @@ object Dijkstra {
 	    "f" -> Nil
     )
     var s = System.nanoTime
-    var res = Dijkstra[String](graph1, List((0, List("a"))), "n", Set())
+    var res = Dijkstra[String](graph1, List((0, List("a"))), "m", Set())
     println("time: "+(System.nanoTime-s)/1e6+"ms")
     println(res)
     s = System.nanoTime
-    res = Dijkstra[String](graph2, List((0, List("a"))), "f", Set())
+    res = Dijkstra[String](graph2, List((0, List("a"))), "e", Set())
     println("time: "+(System.nanoTime-s)/1e6+"ms")
     println(res)
   }

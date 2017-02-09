@@ -23,7 +23,7 @@ dijkstra startNode invalid_index adj_list = runST $ do
         case Set.minView vertList of
           Nothing -> return ()
           Just ((dist, curNode), vertList') ->
-            let pathes = adj_list ! curNode
+            let paths = adj_list ! curNode
                 f vertList (nextNode, weight) = do
                   let newDist = dist + weight
                   old_dist <- readArray minimumDistance nextNode
@@ -35,7 +35,7 @@ dijkstra startNode invalid_index adj_list = runST $ do
                     writeArray prevList nextNode curNode
                     return $ Set.insert (newDist, nextNode) vertList'
             in
-            foldM f vertList' pathes >>= aux
+            foldM f vertList' paths >>= aux
   aux (Set.singleton (0, startNode))
   m <- freeze minimumDistance
   p <- freeze prevList
