@@ -71,7 +71,7 @@ int main()
 {	
 	//a = 0, b = 1, c = 2, d = 3, e = 4, f = 5, g = 6, h = 7, i = 8, j = 9, k = 10, l = 11, m = 12, n = 13, z = 15
 	vector<vector<point>> graph1(14); //size = 6 voor graaf 2, 14 voor graaf 1
-	vector<vector<point>> graph2(14);
+	vector<vector<point>> graph2(6);
 	//graaf 1
 	//a
 	graph1[0].push_back(point(1, 2));
