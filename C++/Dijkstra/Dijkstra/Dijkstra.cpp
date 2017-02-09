@@ -1,6 +1,6 @@
 // Dijkstra.cpp : Defines the entry point for the console application.
 //
-
+#pragma once
 #include "stdafx.h"
 #include <iostream>
 #include <vector>
@@ -71,7 +71,8 @@ int main()
 {
 	time_point<Clock> start = Clock::now();
 	//a = 0, b = 1, c = 2, d = 3, e = 4, f = 5, g = 6, h = 7, i = 8, j = 9, k = 10, l = 11, m = 12, n = 13, z = 15
-	vector<vector<point>> graph(14);
+	vector<vector<point>> graph(14); //size = 6 voor graaf 2, 14 voor graaf 1
+	//graaf 1
 	//a
 	graph[0].push_back(point(1, 2));
 	graph[0].push_back(point(7, 2));
@@ -149,20 +150,46 @@ int main()
 	graph[13].push_back(point(9, 1));
 	graph[13].push_back(point(12, 3));
 
+	////graaf 2
+	////a
+	//graph[0].push_back(point(1, 2));
+	//graph[0].push_back(point(2, 3));
+	////b
+	//graph[1].push_back(point(0, 2));
+	//graph[1].push_back(point(2, 3));
+	//graph[1].push_back(point(3, 2));
+	//graph[1].push_back(point(4, 2));
+	////c
+	//graph[2].push_back(point(1, 3));
+	//graph[2].push_back(point(0, 3));
+	//graph[2].push_back(point(4, 2));
+	////d
+	//graph[3].push_back(point(1, 2));
+	//graph[3].push_back(point(4, 1));
+	//graph[3].push_back(point(5, 4));
+	////e
+	//graph[4].push_back(point(2, 2));
+	//graph[4].push_back(point(1, 2));
+	//graph[4].push_back(point(3, 1));
+	//graph[4].push_back(point(5, 3));
+	////f
+	//graph[5].push_back(point(3, 4));
+	//graph[5].push_back(point(4, 3));
+
 	vector<double> minDist;
 	vector<int> previous;
 	char letterpt[] = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n' };
 
 	dijkstra(0, graph, minDist, previous);
-	list<int> path = getShortestPath(13, previous);
-	cout << "Distance from a to n: " << minDist[13] << " path: ";
+	list<int> path = getShortestPath(graph.size()-1, previous);
+	cout << "Distance from a to n: " << minDist[graph.size()-1] << " path: ";
 	for each (int pt in path)
 	{
 		cout << letterpt[pt] << " ";
 	}
 	time_point<Clock> end = Clock::now();
-	milliseconds diff = duration_cast<milliseconds>(end - start);
-	cout << endl << "time elapsed: " << diff.count() << "ms" << std::endl;
+	chrono::nanoseconds diff = duration_cast<chrono::nanoseconds>(end - start);
+	cout << endl << "time elapsed: " << diff.count() << "ns" << std::endl;
 	getchar();
     return 0;
 }
