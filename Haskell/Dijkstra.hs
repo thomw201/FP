@@ -90,5 +90,3 @@ main = do
   putStrLn $ "Path: " ++ show path
   end   <- getTime Monotonic
   fprint (timeSpecs % "\n") start end
-  putStrLn $ " " ++ show start
-  putStrLn $ " " ++ show end
